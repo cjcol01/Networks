@@ -17,6 +17,7 @@ import java.io.*;
 public class Client {
     public static void main(String[] args) {
         // tests arg lengths to fit constraints
+        // tests list command
         if (args.length == 1 && args[0].equals("list")) {
             try {
                 listFiles();
@@ -24,6 +25,8 @@ public class Client {
                 System.err.println("Error listing files: " + e.getMessage()); 
             }
         }
+
+        // tests put command
         else if (args.length == 2 && args[0].equals("put")) {
             String fileName = args[1];
             try {
@@ -48,16 +51,16 @@ public class Client {
     // requests the server to list all the files in the server directory
     private static void listFiles() throws IOException {
         try (Socket socket = new Socket("localhost", 9257);
-             PrintWriter pr = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+             PrintWriter printWrite = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader myBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
             // Send the "list" command to the server
-            pr.println("list");
-            pr.flush();
+            printWrite.println("list");
+            printWrite.flush();
 
             // Read and print the server's response
             String response;
-            while ((response = in.readLine()) != null) {
+            while ((response = myBufferedReader.readLine()) != null) {
                 System.out.println(response);
             }
         } catch (IOException e) {
@@ -68,23 +71,23 @@ public class Client {
     // sends a file to the server to be saved in the server directory
     private static void sendFile(String fileName) throws IOException {
         try (Socket socket = new Socket("localhost", 9257);
-             PrintWriter pr = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter printWrite = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader myBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              BufferedReader fileReader = new BufferedReader(new FileReader(fileName))) {
                 
             // Send the "put" command along with the file name to the server
-            pr.println("put " + fileName);
+            printWrite.println("put " + fileName);
 
             // Read the file contents and send them to the server
             String line;
             while ((line = fileReader.readLine()) != null) {
-                pr.println(line);
+                printWrite.println(line);
             }
-            pr.println();
-            pr.flush();
+            printWrite.println();
+            printWrite.flush();
 
             // Read and print the server's response
-            String response = in.readLine();
+            String response = myBufferedReader.readLine();
             System.out.println("Server response: " + response);
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("File not found: " + fileName);
