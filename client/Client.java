@@ -22,7 +22,7 @@ public class Client {
             try {
                 listFiles();
             } catch (IOException e) {
-                System.err.println("Error listing files: " + e.getMessage()); 
+                System.err.println("Error listing files from server: " + e.getMessage()); 
             }
         }
 
@@ -32,7 +32,7 @@ public class Client {
             try {
                 sendFile(fileName);
             } catch (IOException e) {
-                System.err.println("Error sending file: " + e.getMessage()); 
+                System.err.println("Error sending file to sever: " + e.getMessage()); 
             }
         }
         else {
@@ -44,7 +44,7 @@ public class Client {
     private static void printUsage() { 
         System.out.println("Usage: java Client <command>");
         System.out.println("Where <command> is:");
-        System.out.println("  list       - Lists all the files in the server directory");
+        System.out.println("  list        - Lists all the files in the server directory");
         System.out.println("  put <fname> - Sends a file to the server");
     }
 
@@ -64,7 +64,7 @@ public class Client {
                 System.out.println(response);
             }
         } catch (IOException e) {
-            throw new IOException("Error communicating with the server", e);
+            throw new IOException("Error communicating with server", e);
         }
     }
 
@@ -90,9 +90,9 @@ public class Client {
             String response = myBufferedReader.readLine();
             System.out.println("Server response: " + response);
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found: " + fileName);
+            throw new FileNotFoundException("File not found on server: " + fileName);
         } catch (IOException e) {
-            throw new IOException("Error communicating with the server", e);
+            throw new IOException("Error communicating with server", e);
         }
     }
 }
